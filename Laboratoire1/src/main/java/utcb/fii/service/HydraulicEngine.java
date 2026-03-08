@@ -29,12 +29,9 @@ public class HydraulicEngine {
             double dp_pa = measurement.dp_mbar() * 100.0; // 1 mbar = 100 Pa
             double d = measurement.d_mm() / 1000.0;
             double area = (Math.PI * Math.pow(d, 2)) / 4.0;
-            double v = (area > 0) ? q / area : 0;
-            double re = (d > 0) ? (4 * q) / (Math.PI * d * NIU) : 0;
-            double lambda = 0;
-            if (v > 0) {
-                lambda = (dp_pa * d * 2) / (L * RHO * Math.pow(v, 2));
-            }
+            double v = (area <= 0) ? 0 : q / area;
+            double re = (d <= 0) ? 0 : (4 * q) / (Math.PI * d * NIU);
+            double lambda = (v <= 0) ? 0 : (dp_pa * d * 2) / (L * RHO * Math.pow(v, 2));
             if (re > 0 && lambda > 0) {
                 regression.addData(Math.log(re), Math.log(lambda));
             }
