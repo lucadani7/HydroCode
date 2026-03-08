@@ -19,6 +19,7 @@ out/
 # Generated output files
 *.xlsx
 *.xls
+.*png
 
 # Logs
 *.log

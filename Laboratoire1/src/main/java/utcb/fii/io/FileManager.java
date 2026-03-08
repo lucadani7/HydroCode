@@ -19,6 +19,21 @@ import java.util.List;
 public class FileManager {
     private static final Logger logger = LoggerFactory.getLogger(FileManager.class);
 
+
+    /**
+     * Rounds the given double value to 5 decimal places.
+     * If the value is not a valid number (NaN) or infinite, the original value is returned.
+     *
+     * @param value the double value to be rounded
+     * @return the rounded value to 5 decimal places, or the original value if it is NaN or infinite
+     */
+    private double roundTo5Decimals(double value) {
+        if (Double.isNaN(value) || Double.isInfinite(value)) {
+            return value;
+        }
+        return Math.round(value * 100000.0) / 100000.0;
+    }
+
     /**
      * Reads measurement data from a CSV file and returns a list of {@code Measurement} objects.
      * The method processes each record from the file and extracts relevant measurement fields.
@@ -61,14 +76,15 @@ public class FileManager {
         return measurementsList;
     }
 
+
     /**
-     * Writes the given list of {@code Measurement} objects to an Excel file at the specified path.
-     * Each measurement is written to a row in the file, and column headers are included in the first row.
-     * The Excel file is automatically formatted with adjusted column widths.
-     * Handles I/O exceptions by logging errors.
+     * Writes the provided list of measurements to an Excel file at the specified file path.
+     * The method creates an Excel workbook with a single sheet containing measurement data.
+     * Each row corresponds to a measurement, and relevant values are rounded to five decimal places.
+     * Auto-sizing is applied to each column for better readability.
      *
-     * @param pathFile The path to the Excel file to write the measurements to.
-     * @param measurementsList The list of {@code Measurement} objects to be written to the file.
+     * @param pathFile          the path to the output Excel file
+     * @param measurementsList  the list of {@code Measurement} objects to be written to the file
      */
     public void writeToFile(String pathFile, List<Measurement> measurementsList) {
         try (Workbook workbook = new XSSFWorkbook()) {
@@ -82,12 +98,12 @@ public class FileManager {
             for (Measurement measurement : measurementsList) {
                 Row row = sheet.createRow(rowNum++);
                 row.createCell(0).setCellValue(measurement.nr());
-                row.createCell(1).setCellValue(measurement.q_ls());
-                row.createCell(2).setCellValue(measurement.dp_mbar());
-                row.createCell(3).setCellValue(measurement.dp_pa());
-                row.createCell(4).setCellValue(measurement.d_mm());
-                row.createCell(5).setCellValue(measurement.re());
-                row.createCell(6).setCellValue(measurement.lambda());
+                row.createCell(1).setCellValue(roundTo5Decimals(measurement.q_ls()));
+                row.createCell(2).setCellValue(roundTo5Decimals(measurement.dp_mbar()));
+                row.createCell(3).setCellValue(roundTo5Decimals(measurement.dp_pa()));
+                row.createCell(4).setCellValue(roundTo5Decimals(measurement.d_mm()));
+                row.createCell(5).setCellValue(roundTo5Decimals(measurement.re()));
+                row.createCell(6).setCellValue(roundTo5Decimals(measurement.lambda()));
             }
             for (int i = 0; i < cols.length; ++i) {
                 sheet.autoSizeColumn(i);

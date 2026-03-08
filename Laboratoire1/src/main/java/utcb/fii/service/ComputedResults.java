@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * A record that represents the results of hydraulic computations.
- *
+ * <p>
  * This record encapsulates a list of processed measurements and a regression model
  * that establishes the relationship between Reynolds number and the friction factor.
  *
