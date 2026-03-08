@@ -30,7 +30,7 @@ public class HydraulicEngine {
             double d = measurement.d_mm() / 1000.0;
             double area = (Math.PI * Math.pow(d, 2)) / 4.0;
             double v = (area > 0) ? q / area : 0;
-            double re = (4 * q) / (Math.PI * d * NIU);
+            double re = (d > 0) ? (4 * q) / (Math.PI * d * NIU) : 0;
             double lambda = 0;
             if (v > 0) {
                 lambda = (dp_pa * d * 2) / (L * RHO * Math.pow(v, 2));
