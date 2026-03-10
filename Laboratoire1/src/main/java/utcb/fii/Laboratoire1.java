@@ -10,6 +10,8 @@ import utcb.fii.service.HydraulicEngine;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class Laboratoire1 {
@@ -19,7 +21,6 @@ public class Laboratoire1 {
         Path resourcesPath = Path.of("Laboratoire1","src", "main", "resources");
         String csvFilePath = resourcesPath.resolve("raw_data.csv").toString();
         String xlsxFilePath = resourcesPath.resolve("processed_data.xlsx").toString();
-        String pngFilePath = resourcesPath.resolve("lambda_diagram.png").toString();
         logger.info("Start Hydraulic Analysis System...");
         FileManager fileManager = new FileManager();
         HydraulicEngine hydraulicEngine = new HydraulicEngine();
@@ -33,9 +34,11 @@ public class Laboratoire1 {
         ComputedResults results = hydraulicEngine.processData(measurementsList);
         logger.info("Writing processed data to Excel file at {}...", xlsxFilePath);
         fileManager.writeToFile(xlsxFilePath, results.processedMeasurements());
-        logger.info("Model: Lambda = {} * Re ^ ({})", String.format("%.5f", Math.exp(results.regression().getIntercept())), String.format("%.5f", results.regression().getSlope()));
-        logger.info("Saving graphic to {}...", pngFilePath);
-        graphicManager.saveGraphicAsPng(pngFilePath, results.processedMeasurements(), results.regression());
-        graphicManager.drawGraphic(results.processedMeasurements(), results.regression());
+        Map<Double, List<Measurement>> differentPieces = results.processedMeasurements().stream().collect(Collectors.groupingBy(Measurement::d_mm));
+        differentPieces.forEach((diameter, points) -> {
+            var specificRegression = hydraulicEngine.processData(points);
+            String fileName = "diagrama_fi" + diameter.intValue() + ".png";
+            graphicManager.saveGraphicAsPng(resourcesPath.resolve(fileName).toString(), points, specificRegression.regression());
+        });
     }
 }

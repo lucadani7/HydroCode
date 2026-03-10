@@ -2,7 +2,6 @@ package utcb.fii.gui;
 
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.LogAxis;
@@ -15,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utcb.fii.model.Measurement;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -48,33 +46,6 @@ public class GraphicManager {
         } catch (IOException e) {
             logger.error("Failed to save graphic: {}", e.getMessage());
         }
-    }
-
-    /**
-     * Draws a graphical representation of the relationship between Reynolds number (Re)
-     * and the loss coefficient (Lambda) using the provided measurement data and regression model.
-     * The graph is displayed in a new window with an interactive chart.
-     *
-     * @param measurementsList a list of {@link Measurement} objects. Each measurement contains
-     *                         properties such as the Reynolds number (Re) and the loss coefficient (Lambda).
-     *                         These values are used to plot the measured data points in the chart.
-     *                         Only measurements with positive Re and Lambda values are considered.
-     * @param regression       a {@link SimpleRegression} object representing the pre-computed regression
-     *                         model used to generate a trend line in the graph. This model provides
-     *                         analytical insights into the relationship between Re and Lambda.
-     */
-    public void drawGraphic(List<Measurement> measurementsList, SimpleRegression regression) {
-        JFreeChart chart = createChart(measurementsList, regression);
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("UTCB Hydraulique - Laboratoire 1");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new Dimension(800, 600));
-            frame.add(chartPanel, BorderLayout.CENTER);
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });
     }
 
     /**
