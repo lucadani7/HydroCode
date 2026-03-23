@@ -6,7 +6,7 @@ public record Measurement(int nr, double q, double dp, String type) {
     private static final double D = 0.015;
     private static final double RHO = 998.2;
     private static final double NIU = 1.004e-6;
-    private static final double AREA = Math.PI * Math.pow(D / 2, 2);
+    private static final double AREA = Math.PI * Math.pow(D / 2, 2) / 4;
 
     public double getVelocity() {
         return q <= 0 ? 0 : roundTo5Decimals((q / 1000.0) / AREA);
